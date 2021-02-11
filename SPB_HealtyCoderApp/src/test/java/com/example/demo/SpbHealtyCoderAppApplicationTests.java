@@ -4,6 +4,7 @@ import com.healthycoderapp.BMICalculator;
 import com.healthycoderapp.Coder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @SpringBootTest
 class SpbHealtyCoderAppApplicationTests {
@@ -32,41 +33,42 @@ class SpbHealtyCoderAppApplicationTests {
         System.out.println("Stopping DB Servers / Connections ...");
     }
 
-    @Test
-    void contextLoads() {
-    }
+    @Nested
+    class IsDietRecommendedTest {
 
-    //    @ValueSource(doubles = {70.0, 89.0, 95.0, 110.0})
-    //    @CsvSource(value = {"89.0, 1.72", "95.0, 1.75", "110.0, 1.78"})
-    @ParameterizedTest(name = "weight={0}, height={1}")
-    @CsvFileSource(resources = "/csvs/diet-recommended-input-data.csv", numLinesToSkip = 1)
-    void should_ReturnTrue_When_DietRecommended(Double coderWeight, Double coderHeight) {
+        //    @ValueSource(doubles = {70.0, 89.0, 95.0, 110.0})
+        //    @CsvSource(value = {"89.0, 1.72", "95.0, 1.75", "110.0, 1.78"})
+        @ParameterizedTest(name = "weight={0}, height={1}")
+        @CsvFileSource(resources = "/csvs/diet-recommended-input-data.csv", numLinesToSkip = 1)
+        void should_ReturnTrue_When_DietRecommended(Double coderWeight, Double coderHeight) {
 
-        boolean recommended = BMICalculator.isDietRecommended(coderWeight, coderHeight);
+            boolean recommended = BMICalculator.isDietRecommended(coderWeight, coderHeight);
 
-        assertTrue(recommended);
-    }
+            assertTrue(recommended);
+        }
 
-    @Test
-    void should_ReturnFalse_When_DietNotRecommended() {
+        @Test
+        void should_ReturnFalse_When_DietNotRecommended() {
 
-        double weight = 89.0;
-        double height = 1.72;
+            double weight = 89.0;
+            double height = 1.72;
 
-        boolean recommended = BMICalculator.isDietRecommended(weight, height);
+            boolean recommended = BMICalculator.isDietRecommended(weight, height);
 
-        assertFalse(recommended);
-    }
+            assertFalse(recommended);
+        }
 
-    @Test
-    void should_ThrowAirithmeticException_When_HeightZero() {
+        @Test
+        void should_ThrowAirithmeticException_When_HeightZero() {
 
-        double weight = 0;
-        double height = 0;
+            double weight = 0;
+            double height = 0;
 
-        Executable executable = () -> BMICalculator.isDietRecommended(weight, height);
+            Executable executable = () -> BMICalculator.isDietRecommended(weight, height);
 
-        assertThrows(ArithmeticException.class, executable);
+            assertThrows(ArithmeticException.class, executable);
+        }
+
     }
 
     @Test

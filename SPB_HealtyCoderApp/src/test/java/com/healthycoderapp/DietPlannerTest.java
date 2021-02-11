@@ -1,8 +1,8 @@
 package com.healthycoderapp;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +21,9 @@ class DietPlannerTest {
         System.out.println("A unit test was finished.");
     }
 
-    @RepeatedTest(value = 10, name = RepeatedTest.LONG_DISPLAY_NAME)
+    @DisabledOnOs(OS.WINDOWS)
+    @RepeatedTest(value = 5, name = RepeatedTest.LONG_DISPLAY_NAME)
+    @DisplayName(">>> customised name")
     void should_ReturnCorrectDietPlan_When_CorrectCoder() {
 
         Coder coder = new Coder(1.82, 75.0, 26, Gender.MALE);
