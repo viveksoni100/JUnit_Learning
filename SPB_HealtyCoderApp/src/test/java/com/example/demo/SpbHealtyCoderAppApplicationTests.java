@@ -7,17 +7,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 @SpringBootTest
 class SpbHealtyCoderAppApplicationTests {
+
+    private String environment = "dev";
 
     @BeforeAll
     static void beforeAll() {
@@ -34,8 +37,9 @@ class SpbHealtyCoderAppApplicationTests {
     }
 
     //    @ValueSource(doubles = {70.0, 89.0, 95.0, 110.0})
+    //    @CsvSource(value = {"89.0, 1.72", "95.0, 1.75", "110.0, 1.78"})
     @ParameterizedTest(name = "weight={0}, height={1}")
-    @CsvSource(value = {"89.0, 1.72", "95.0, 1.75", "110.0, 1.78"})
+    @CsvFileSource(resources = "/csvs/diet-recommended-input-data.csv", numLinesToSkip = 1)
     void should_ReturnTrue_When_DietRecommended(Double coderWeight, Double coderHeight) {
 
         boolean recommended = BMICalculator.isDietRecommended(coderWeight, coderHeight);
@@ -79,6 +83,22 @@ class SpbHealtyCoderAppApplicationTests {
                 () -> assertEquals(1.82, coderWithWorstBMI.getHeight()),
                 () -> assertEquals(98.0, coderWithWorstBMI.getWeight())
         );
+    }
+
+    // Performance Testing
+    @Test
+    void should_ReturnCoderWithWorstBMI_InOneMiliSeccond_When_CoderListNotEmpty() {
+
+        assumeTrue(this.environment.equals("prod"));
+        List<Coder> coders = new ArrayList<>();
+
+        for (int i = 0; i < 10000; i++) {
+            coders.add(new Coder(1.0 + i, 10.0 + i));
+        }
+
+        Executable executable = () -> BMICalculator.findCoderWithWorstBMI(coders);
+
+        assertTimeout(Duration.ofMillis(1), executable);
     }
 
     @Test

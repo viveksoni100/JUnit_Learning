@@ -2,9 +2,10 @@ package com.healthycoderapp;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DietPlannerTest {
 
@@ -20,10 +21,8 @@ class DietPlannerTest {
         System.out.println("A unit test was finished.");
     }
 
-
-
-    @Test
-    void should_ReturnCorrectDietPlan_When_Correct() {
+    @RepeatedTest(value = 10, name = RepeatedTest.LONG_DISPLAY_NAME)
+    void should_ReturnCorrectDietPlan_When_CorrectCoder() {
 
         Coder coder = new Coder(1.82, 75.0, 26, Gender.MALE);
         DietPlan expected = new DietPlan(2202, 110, 73, 275);
